@@ -15,6 +15,11 @@ public class WardService {
 
     public WardService(WardRepository wardRepository) {
         this.wardRepository = wardRepository;
+
+    }
+    // RETRIEVE WARDS THAT ARE NOT ASSIGNED TO ANY NURSE
+    public List<Ward> getFreeWards() {
+        return wardRepository.findFreeWards();
     }
 
     // SAVE A NEW WARD

@@ -87,4 +87,9 @@ public class WardController {
 
         return ResponseEntity.ok(result);
     }
+    // RETRIEVE ALL FREE WARDS
+    @GetMapping("/free")
+    public ResponseEntity<List<Ward>> getFreeWards() {
+        return ResponseEntity.ok(wardService.getFreeWards());
+    }
 }
