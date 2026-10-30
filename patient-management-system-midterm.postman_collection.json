@@ -1,0 +1,164 @@
+{
+  "info": {
+    "_postman_id": "patient-management-system-midterm",
+    "name": "PATIENT MANAGEMENT SYSTEM - MIDTERM",
+    "description": "Collection reconstructed from the uploaded Postman local collection ZIP. Part D and Part E were omitted because their uploaded request files had empty URLs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PART A CRUD OPERATIONS",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admissions/all",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "admissions",
+            "all"
+          ],
+          "query": []
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PART B DERIVED QUERIES",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admissions/between?start=2026-10-01&end=2026-10-31",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "admissions",
+            "between"
+          ],
+          "query": [
+            {
+              "key": "start",
+              "value": "2026-10-01",
+              "disabled": false
+            },
+            {
+              "key": "end",
+              "value": "2026-10-31",
+              "disabled": false
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PART C JPQL QUERIES",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/qualifications/unused",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "qualifications",
+            "unused"
+          ],
+          "query": []
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PART F STATISTICS AND BULK",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admissions/stats/by-status",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "admissions",
+            "stats",
+            "by-status"
+          ],
+          "query": []
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "BONUS DASHBOARD SUMMARY",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/dashboard/summary",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "dashboard",
+            "summary"
+          ],
+          "query": []
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "BONUS PAGINATED",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admissions/page?page=0&size=5&sort=admissionDate,desc",
+          "protocol": "http",
+          "host": [
+            "localhost:8080"
+          ],
+          "path": [
+            "api",
+            "admissions",
+            "page"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0",
+              "disabled": false
+            },
+            {
+              "key": "size",
+              "value": "5",
+              "disabled": false
+            },
+            {
+              "key": "sort",
+              "value": "admissionDate,desc",
+              "disabled": false
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
