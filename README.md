@@ -72,7 +72,7 @@ Before running the application, install:
 
 
 
-Create a PostgreSQL database named `PMS\_db` if it does not already exist.
+Create a PostgreSQL database named `mid_db` if it does not already exist.
 
 
 
@@ -80,11 +80,11 @@ Configure the database connection using environment variables:
 
 
 
-DB\_URL: jdbc:postgresql://localhost:5432/PMS\_db
+DB\_URL: jdbc:postgresql://localhost:5432/mid_db
 
 DB\_USERNAME`: 
 
-DB\_PASSWORD`: admin
+DB\_PASSWORD`: ----
 
 
 
