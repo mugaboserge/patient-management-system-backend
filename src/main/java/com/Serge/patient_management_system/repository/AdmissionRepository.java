@@ -1,5 +1,6 @@
 package com.Serge.patient_management_system.repository;
-
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 import com.Serge.patient_management_system.domain.Admission;
 import com.Serge.patient_management_system.domain.Inpatient;
 import com.Serge.patient_management_system.enums.AdmissionStatus;
@@ -40,4 +41,29 @@ public interface AdmissionRepository extends JpaRepository<Admission, UUID> {
     List<Inpatient> findDistinctInpatientsByNurseId(
             @Param("nurseId") UUID nurseId
     );
+    // COUNT ADMISSIONS GROUPED BY STATUS
+    @Query("SELECT a.status, COUNT(a) FROM Admission a GROUP BY a.status")
+    List<Object[]> countAdmissionsByStatus();
+
+    // CANCEL NON-DISCHARGED ADMISSIONS FOR A NURSE ON A SPECIFIC DATE
+    @Modifying
+    @Transactional
+    @Query("UPDATE Admission a SET a.status = :newStatus " +
+            "WHERE a.nurse.id = :nurseId " +
+            "AND a.admissionDate = :date " +
+            "AND a.status <> :excludedStatus")
+    int cancelAdmissionsForNurseOnDate(
+            @Param("nurseId") UUID nurseId,
+            @Param("date") LocalDate date,
+            @Param("newStatus") AdmissionStatus newStatus,
+            @Param("excludedStatus") AdmissionStatus excludedStatus
+    );
+
+    // COUNT ADMISSIONS CREATED FOR A SPECIFIC DATE
+    long countByAdmissionDate(LocalDate admissionDate);
+
+    // COUNT ADMISSIONS WITH A SPECIFIC STATUS
+
+    long countByStatus(AdmissionStatus status);
 }
+

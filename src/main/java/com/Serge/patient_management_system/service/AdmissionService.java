@@ -1,5 +1,6 @@
 package com.Serge.patient_management_system.service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.Serge.patient_management_system.domain.Admission;
 import com.Serge.patient_management_system.domain.BillingItem;
 import com.Serge.patient_management_system.domain.Inpatient;
@@ -265,5 +266,31 @@ public class AdmissionService {
         admissionRepository.delete(admission);
 
         return "Admission deleted successfully";
+    }
+    // GET ADMISSION COUNTS GROUPED BY STATUS
+    public List<Object[]> getAdmissionStatisticsByStatus() {
+        return admissionRepository.countAdmissionsByStatus();
+    }
+    // CANCEL ADMISSIONS FOR A NURSE ON A SPECIFIC DATE
+    public String cancelAdmissionsForNurseOnDate(
+            UUID nurseId, LocalDate date) {
+
+        // UPDATE ADMISSIONS EXCEPT THOSE ALREADY DISCHARGED
+        int cancelledCount =
+                admissionRepository.cancelAdmissionsForNurseOnDate(
+                        nurseId,
+                        date,
+                        AdmissionStatus.REFERRED,
+                        AdmissionStatus.DISCHARGED
+                );
+
+        // RETURN THE ACTUAL NUMBER OF UPDATED ADMISSIONS
+        return cancelledCount + " admissions cancelled";
+    }
+
+    // GET ADMISSIONS WITH PAGINATION
+
+    public Page<Admission> getAdmissionsPage(Pageable pageable) {
+        return admissionRepository.findAll(pageable);
     }
 }

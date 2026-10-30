@@ -1,196 +1,392 @@
-Patient Management System Backend
+# Patient Management System Backend
 
+## 1. Project Overview
 
+The Patient Management System is a RESTful backend application developed
+for the **INSY 8322 Midterm Project Examination**. It manages
+inpatients, nurses, qualifications, wards, admissions, and billing
+items.
 
-&#x20;1. Student Information
+The backend provides CRUD operations, derived database queries, JPQL
+queries, business-rule validation, billing operations, admission
+statistics, bulk updates, a dashboard summary, and paginated admission
+records.
 
+## 2. Technologies
 
+-   Java 17
+-   Spring Boot
+-   Spring Data JPA
+-   Hibernate
+-   PostgreSQL
+-   Maven
+-   Postman
+-   Git and GitHub
 
-Student Name: MUGABO Serge
+> Check `pom.xml` for the exact Spring Boot and dependency versions used
+> by this copy of the project.
 
-Student ID:26065
+## 3. Main Features
 
-Project Name: Patient Management System Backend
+### Part A --- CRUD Operations
 
-Course: INSY 8322 — Web Technology and Internet
+CRUD operations are implemented for:
 
+-   Qualification
+-   Ward
+-   Nurse
+-   Inpatient
+-   Admission
 
+### Part B --- Derived Queries
 
-2\. Project Description
+-   Search inpatients by last name, case-insensitively, ordered by first
+    name.
+-   Find admissions by status, ordered by admission date.
+-   Find admissions between two dates, inclusive.
 
+### Part C --- JPQL Queries
 
+-   Find nurses by qualification name.
+-   Find wards that are not assigned to a nurse.
+-   Find qualifications that are not assigned to any nurse.
+-   Find distinct inpatients associated with a nurse's admissions.
 
-The Patient Management System Backend is a REST API developed using Spring Boot and PostgreSQL.
+### Part D --- Business Rules
 
+-   Validate admission dates and prevent conflicting nurse admissions.
+-   Control allowed admission-status transitions.
+-   Add a qualification to a nurse without removing existing
+    qualifications.
+-   Move a nurse to a ward while preventing assignment conflicts.
 
+### Part E --- Billing Items
 
-It provides endpoints for managing hospital wards, nurses, qualifications, inpatients, admissions, and billing items.
+-   Create billing items for discharged admissions.
+-   Retrieve billing items for an inpatient.
+-   Delete billing items.
+-   Prevent deletion of an admission while billing items are associated
+    with it.
 
+### Part F --- Statistics and Bulk Updates
 
+-   Count admissions grouped by status.
+-   Bulk-update eligible admissions for a nurse on a specified date,
+    excluding discharged admissions.
 
-3\. Technologies Used
+### Bonus Features
 
+-   Dashboard summary.
+-   Paginated admission records.
 
+## 4. Project Structure
 
-\- Java
+The main source packages are organized under:
 
-\- Spring Boot
+`com.Serge.patient_management_system`
 
-\- Spring Data JPA
+Typical package responsibilities:
 
-\- Hibernate
+Package        Responsibility
+  -------------- --------------------------------------------
+`controller`   REST API endpoints
+`domain`       JPA entity classes
+`enums`        Enumeration types such as admission status
+`repository`   Spring Data JPA repositories and queries
+`service`      Application logic and business rules
 
-\- PostgreSQL
+Application configuration is stored in:
 
-\- Maven
+`src/main/resources/application.properties`
 
-\- Postman
+## 5. Prerequisites
 
-\- Git and GitHub
+Install the following before running the application:
 
+1.  JDK 17 (or the Java version specified in `pom.xml`).
+2.  PostgreSQL.
+3.  Maven, or use the Maven Wrapper included in the project.
+4.  Postman for API testing.
 
+Verify Java:
 
-4\. Prerequisites
+``` bash
+java -version
+```
 
+Verify Maven if installed separately:
 
+``` bash
+mvn -version
+```
 
-Before running the application, install:
+## 6. PostgreSQL Database Setup
 
+### Step 1 --- Create the database
 
+Open pgAdmin or the PostgreSQL command line and create the database.
 
-1\. Java Development Kit (JDK) compatible with the project configuration.
+Example database name:
 
-2\. PostgreSQL.
+``` sql
+CREATE DATABASE patient_management_system_db;
+```
 
-3\. Maven, or use the included Maven Wrapper.
+Use the database name already configured by the project if it is
+different. Do not create a second database unnecessarily.
 
-4\. Postman for API testing.
+### Step 2 --- Configure the connection
 
+Open:
 
+`src/main/resources/application.properties`
 
-5\. Database Configuration
+Set the JDBC URL, PostgreSQL username, and password to match your local
+PostgreSQL installation.
 
+Example only:
 
+``` properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/patient_management_system_db
+spring.datasource.username=YOUR_POSTGRES_USERNAME
+spring.datasource.password=YOUR_POSTGRES_PASSWORD
+spring.datasource.driver-class-name=org.postgresql.Driver
 
-Create a PostgreSQL database named `PMS\_db` if it does not already exist.
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+```
 
+Replace the example database name and credentials with the values used
+on your computer. Preserve any working settings already present in
+`application.properties`; do not overwrite project-specific
+configuration blindly.
 
+**Security:** Never commit a real database password, API key, or other
+secret to a public GitHub repository. Use environment variables or a
+local, untracked configuration file for private credentials.
 
-Configure the database connection using environment variables:
+### Step 3 --- Confirm the database is available
 
+Before starting Spring Boot, confirm that:
 
+-   PostgreSQL is running.
+-   The configured database exists.
+-   The username and password are correct.
+-   The PostgreSQL JDBC dependency is present in `pom.xml`.
 
-DB\_URL: jdbc:postgresql://localhost:5432/PMS\_db
+The application may create or update tables depending on the Hibernate
+configuration. This setting does not automatically guarantee that the
+examination's required seed records have been inserted. Confirm that the
+required test data exists in your database.
 
-DB\_USERNAME`: 
+## 7. Run the Application
 
-DB\_PASSWORD`: admin
+Open PowerShell or a terminal in the project root (the directory
+containing `pom.xml`).
 
+### Windows --- Maven Wrapper
 
+``` powershell
+.\mvnw.cmd spring-boot:run
+```
 
+### Maven installed separately
 
+``` bash
+mvn spring-boot:run
+```
 
+To build the project:
 
+``` powershell
+.\mvnw.cmd clean package
+```
 
-Step 5: Run the application
+Or:
 
+``` bash
+mvn clean package
+```
 
+Unless the application is configured to use another port, the base URL
+is:
 
-On Windows PowerShell:
+`http://localhost:8080`
 
+Wait until the Spring Boot application reports that it has started
+successfully. Check the console for database or application errors.
 
+## 8. API Endpoint Reference
 
-powershell
+The following routes are based on the project requirements. Replace
+placeholder IDs, dates, and file numbers with real values from your
+database.
 
-.\\mvnw.cmd spring-boot:run
+### Part B --- Derived Queries
 
+  -----------------------------------------------------------------------------------------------------------
+Method                  Endpoint                                                    Purpose
+  ----------------------- ----------------------------------------------------------- -----------------------
+GET                     `/api/inpatients/by-last-name?lastName=uwase`               Search inpatients by
+last name
 
+GET                     `/api/admissions/by-status?status=ADMITTED`                 Find admissions by
+status
 
+GET                     `/api/admissions/between?start=2026-10-01&end=2026-10-31`   Find admissions between
+dates
+  -----------------------------------------------------------------------------------------------------------
 
+### Part C --- JPQL Queries
 
-The application uses port `8080` by default unless configured otherwise.
+  -----------------------------------------------------------------------------------------------
+Method                  Endpoint                                        Purpose
+  ----------------------- ----------------------------------------------- -----------------------
+GET                     `/api/nurses/by-qualification?name=maternity`   Find nurses by
+qualification
 
+GET                     `/api/wards/free`                               Find free wards
 
+GET                     `/api/qualifications/unused`                    Find unused
+qualifications
 
-7\. API Endpoints
+GET                     `/api/inpatients/of-nurse/{nurseId}`            Find inpatients
+associated with a nurse
+  -----------------------------------------------------------------------------------------------
 
+### Part D --- Business Rules
 
+  ----------------------------------------------------------------------------------------------------------
+Method                  Endpoint                                                   Purpose
+  ----------------------- ---------------------------------------------------------- -----------------------
+POST                    `/api/admissions/save`                                     Save an admission with
+validation
 
-The following endpoints are available in the current implementation.
+PATCH                   `/api/admissions/{id}/status?status=UNDER_TREATMENT`       Change admission status
 
+PUT                     `/api/nurses/{nurseId}/qualifications/{qualificationId}`   Add a qualification to
+a nurse
 
+PATCH                   `/api/nurses/{nurseId}/ward?wardNumber=4`                  Change a nurse's ward
+----------------------------------------------------------------------------------------------------------
 
-| Resource | HTTP Method | Endpoint | Purpose |
+### Part E --- Billing Items
 
-|---|---|---|---|
+  -----------------------------------------------------------------------------------------------------
+Method                  Endpoint                                              Purpose
+  ----------------------- ----------------------------------------------------- -----------------------
+POST                    `/api/billing-items/save?admissionId={admissionId}`   Create a billing item
 
-| Wards | POST | `/api/wards/save` | Create a ward |
+GET                     `/api/billing-items/inpatient/{fileNumber}`           Retrieve an inpatient's
+billing items
 
-| Wards | GET | `/api/wards/all` | Retrieve all wards |
+DELETE                  `/api/billing-items/delete/{id}`                      Delete a billing item
+-----------------------------------------------------------------------------------------------------
 
-| Wards | GET | `/api/wards/{id}` | Retrieve a ward by ID |
+### Part F --- Statistics and Bulk Updates
 
-| Wards | PUT | `/api/wards/update/{id}` | Update a ward |
+  ----------------------------------------------------------------------------------------------------------------
+Method                  Endpoint                                                         Purpose
+  ----------------------- ---------------------------------------------------------------- -----------------------
+GET                     `/api/admissions/stats/by-status`                                Count admissions by
+status
 
-| Wards | DELETE | `/api/wards/delete/{id}` | Delete a ward |
+PATCH                   `/api/admissions/cancel-day?nurseId={nurseId}&date=2026-10-20`   Refer eligible
+admissions for a nurse
+on a date
+  ----------------------------------------------------------------------------------------------------------------
 
-| Qualifications | POST | `/api/qualifications/save` | Create a qualification |
+### Bonus
 
-| Qualifications | GET | `/api/qualifications/all` | Retrieve all qualifications |
+  --------------------------------------------------------------------------------------------------------------
+Method                  Endpoint                                                       Purpose
+  ----------------------- -------------------------------------------------------------- -----------------------
+GET                     `/api/dashboard/summary`                                       Retrieve dashboard
+statistics
 
-| Qualifications | GET | `/api/qualifications/unused` | Retrieve unassigned qualifications |
+GET                     `/api/admissions/page?page=0&size=5&sort=admissionDate,desc`   Retrieve paginated
+admissions
+  --------------------------------------------------------------------------------------------------------------
 
-| Qualifications | GET | `/api/qualifications/{id}` | Retrieve a qualification by ID |
+For the complete CRUD route list and request-body formats, use the
+corresponding controller classes and the complete Postman requests in
+the project. Confirm route names against the actual controllers before
+submission.
 
-| Qualifications | PUT | `/api/qualifications/update/{id}` | Update a qualification |
+## 9. Test with Postman
 
-| Qualifications | DELETE | `/api/qualifications/delete/{id}` | Delete a qualification |
+Import the collection file:
 
-| Nurses | GET | `/api/nurses/all` | Retrieve all nurses |
+`patient-management-system-midterm.postman_collection.json`
 
-| Nurses | GET | `/api/nurses/by-qualification?name=...` | Search nurses by qualification |
+In Postman:
 
-| Inpatients | GET | `/api/inpatients/all` | Retrieve all inpatients |
+1.  Select **Import**.
+2.  Choose **Files**.
+3.  Select the collection JSON file.
+4.  Import the collection.
+5.  Set the base URL to `http://localhost:8080`, if required.
+6.  Run the requests and inspect the response status and JSON body.
 
-| Inpatients | GET | `/api/inpatients/by-last-name?lastName=...` | Search inpatients by last name |
+Test successful requests and relevant error cases, including invalid
+admission dates, conflicting admissions, invalid status transitions,
+missing records, occupied wards, and billing restrictions.
 
-| Admissions | GET | `/api/admissions/all` | Retrieve all admissions |
+**Collection note:** The supplied reconstructed Postman collection
+currently contains six requests recovered from the uploaded local
+collection files. The Part D and Part E request files in that ZIP did
+not contain usable URLs. Add and verify those requests, as well as any
+other missing requests, before treating the collection as the complete
+examination submission.
 
-| Admissions | GET | `/api/admissions/by-status?status=ADMITTED` | Filter admissions by status |
+## 10. Common HTTP Status Codes
 
-| Admissions | GET | `/api/admissions/between?start=YYYY-MM-DD\&end=YYYY-MM-DD` | Retrieve admissions between dates |
+Code   Meaning
+  ------ -----------------------------------------------------
+200    Request succeeded
+201    Resource created
+400    Invalid request or business-rule validation failure
+404    Requested resource not found
+409    Conflict with an existing resource or business rule
+500    Unexpected server-side error
 
-| Admissions | GET | `/api/admissions/inpatients/of-nurse/{nurseId}` | Retrieve inpatients associated with a nurse |
+The actual response depends on the endpoint and its exception handling.
 
-| Billing Items | GET | `/api/billing-items/all` | Retrieve all billing items |
+## 11. Troubleshooting
 
-| Billing Items | GET | `/api/billing-items/{id}` | Retrieve a billing item by ID |
+**Database connection error** - Confirm PostgreSQL is running. - Verify
+the database name, username, password, and port in
+`application.properties`.
 
-| Billing Items | GET | `/api/billing-items/inpatient/{fileNumber}` | Retrieve billing items by inpatient file number |
+**Application does not start** - Check the terminal output for
+compilation errors, dependency problems, or database errors. - Confirm
+that the Java version matches the project configuration.
 
+**Endpoint returns 404** - Verify the URL, HTTP method, controller
+mapping, and application port.
 
+**Endpoint returns 400 or 409** - Check request parameters, JSON body,
+and the business rule associated with that endpoint.
 
-Other endpoints are implemented for creating, updating, deleting, and managing resources. Refer to the corresponding controllers for the complete route definitions.
+**Expected records are missing** - Confirm that the application is
+connected to the intended database and that the required seed data has
+been inserted.
 
+## 12. Submission Checklist
 
+-   Java source code.
+-   `pom.xml` and Maven Wrapper files, if included in the project.
+-   `README.md`.
+-   `patient-management-system-midterm.postman_collection.json`.
+-   All required Postman requests, including successful and error-case
+    tests.
+-   No passwords, private keys, or other secrets.
 
-8\. Postman Testing
+## 13. Project Information
 
-
-
-The Postman collection will be provided in the project root as:
-
-
-
-`patient-management-system-midterm.postman\_collection.json`
-
-
-
-
-
-
-
-MUGABO Serge  
-
-ID: 26065
-
+-   **Project:** Patient Management System Backend
+-   **Course:** INSY 8322
+-   **Assessment:** Midterm Project Examination
+-   **Backend:** Java / Spring Boot
+-   **Database:** PostgreSQL

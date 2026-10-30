@@ -17,7 +17,14 @@ public interface WardRepository extends JpaRepository<Ward, UUID> {
     // CHECK WHETHER A WARD NUMBER ALREADY EXISTS
     boolean existsByWardNumber(int wardNumber);
 
+    // COUNT WARDS THAT ARE NOT ASSIGNED TO ANY NURSE
+
+    @Query("SELECT COUNT(w) FROM Ward w WHERE NOT EXISTS " +
+            "(SELECT n FROM Nurse n WHERE n.ward = w)")
+    long countFreeWards();
+
     // FIND WARDS THAT ARE NOT ASSIGNED TO ANY NURSE
+
     @Query("SELECT w FROM Ward w WHERE NOT EXISTS " +
             "(SELECT n FROM Nurse n WHERE n.ward = w) " +
             "ORDER BY w.wardNumber ASC")

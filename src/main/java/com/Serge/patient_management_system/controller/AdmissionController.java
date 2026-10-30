@@ -4,7 +4,8 @@ import com.Serge.patient_management_system.domain.Admission;
 import com.Serge.patient_management_system.domain.Inpatient;
 import com.Serge.patient_management_system.enums.AdmissionStatus;
 import com.Serge.patient_management_system.service.AdmissionService;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,14 @@ public class AdmissionController {
         }
     }
 
+    // GET ADMISSIONS WITH PAGINATION
+    @GetMapping("/page")
+    public ResponseEntity<Page<Admission>> getAdmissionsPage(Pageable pageable) {
+        return ResponseEntity.ok(
+                admissionService.getAdmissionsPage(pageable)
+        );
+    }
+
     // RETRIEVE ALL ADMISSIONS
     @GetMapping("/all")
     public ResponseEntity<List<Admission>> getAllAdmissions() {
@@ -51,7 +60,8 @@ public class AdmissionController {
                 admissionService.getAllAdmissions());
     }
 
-    // RETRIEVE AN ADMISSION BY ID
+    // RETRIEVE AN ADMISSION BY
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getAdmissionById(
             @PathVariable UUID id) {
@@ -187,5 +197,24 @@ public class AdmissionController {
             return ResponseEntity.status(ex.getStatusCode())
                     .body(ex.getReason());
         }
+    }
+    // GET ADMISSION STATISTICS GROUPED BY STATUS
+    @GetMapping("/stats/by-status")
+    public ResponseEntity<List<Object[]>> getAdmissionStatisticsByStatus() {
+        return ResponseEntity.ok(
+                admissionService.getAdmissionStatisticsByStatus()
+        );
+    }
+    // CANCEL ADMISSIONS FOR A NURSE ON A SPECIFIC DATE
+    @PatchMapping("/cancel-day")
+    public ResponseEntity<String> cancelAdmissionsForDay(
+            @RequestParam UUID nurseId,
+            @RequestParam LocalDate date) {
+
+        String result =
+                admissionService.cancelAdmissionsForNurseOnDate(
+                        nurseId, date);
+
+        return ResponseEntity.ok(result);
     }
 }
