@@ -166,8 +166,8 @@ Example only:
 
 ``` properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/patient_management_system_db
-spring.datasource.username=YOUR_POSTGRES_USERNAME
-spring.datasource.password=YOUR_POSTGRES_PASSWORD
+spring.datasource.username=
+spring.datasource.password=-----
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.hibernate.ddl-auto=update
