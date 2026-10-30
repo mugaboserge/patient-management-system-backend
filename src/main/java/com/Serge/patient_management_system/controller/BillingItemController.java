@@ -21,7 +21,8 @@ public class BillingItemController {
         this.billingItemService = billingItemService;
     }
 
-    // CREATE A BILLING ITEM FOR A DISCHARGED ADMISSION
+    // CREATE BILLING (KUMURWAYI USEZEREWE)
+
     @PostMapping("/save")
     public ResponseEntity<String> saveBillingItem(
             @RequestParam UUID admissionId,
@@ -40,6 +41,7 @@ public class BillingItemController {
     }
 
     // RETRIEVE ALL BILLING ITEMS
+
     @GetMapping("/all")
     public ResponseEntity<List<BillingItem>> getAllBillingItems() {
 
@@ -48,6 +50,7 @@ public class BillingItemController {
     }
 
     // RETRIEVE A BILLING ITEM BY ID
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getBillingItemById(
             @PathVariable UUID id) {
@@ -59,6 +62,7 @@ public class BillingItemController {
     }
 
     // RETRIEVE BILLING ITEMS BY INPATIENT FILE NUMBER
+
     @GetMapping("/inpatient/{fileNumber}")
     public ResponseEntity<List<BillingItem>> getBillingItemsByFileNumber(
             @PathVariable String fileNumber) {
@@ -67,7 +71,8 @@ public class BillingItemController {
                 billingItemService.getBillingItemsByFileNumber(fileNumber));
     }
 
-    // DELETE A BILLING ITEM
+    // GUSIBA BILLING ITEM
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteBillingItem(
             @PathVariable UUID id) {

@@ -97,4 +97,25 @@ public class InpatientController {
         return ResponseEntity.ok(
                 inpatientService.getInpatientsByLastName(lastName));
     }
+
+    // FIND INPATIENTS ASSOCIATED WITH A NURSE
+    @GetMapping("/of-nurse/{nurseId}")
+    public ResponseEntity<?> getInpatientsByNurseId(
+            @PathVariable UUID nurseId) {
+
+        // ASK THE SERVICE TO FIND THE INPATIENTS
+        Optional<List<Inpatient>> result =
+                inpatientService.getInpatientsByNurseId(nurseId);
+
+        // CHECK WHETHER THE NURSE EXISTS
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("The nurse with that id does not exist");
+        }
+
+        // RETURN THE INPATIENTS FOR THE EXISTING NURSE
+        return ResponseEntity.ok(result.get());
+    }
+
+
 }

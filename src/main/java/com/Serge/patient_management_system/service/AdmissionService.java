@@ -49,13 +49,6 @@ public class AdmissionService {
                     "Admission date is required");
         }
 
-        // PREVENT ADMISSIONS WITH PAST DATES
-        if (admission.getAdmissionDate().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Admission date cannot be in the past");
-        }
-
         // CHECK WHETHER THE INPATIENT IS PROVIDED
         if (admission.getInpatient() == null
                 || admission.getInpatient().getId() == null) {
@@ -104,9 +97,10 @@ public class AdmissionService {
         admission.setInpatient(inpatient);
         admission.setNurse(nurse);
 
-        // EVERY NEW ADMISSION MUST START WITH ADMITTED STATUS
+        // SET THE DEFAULT ADMISSION STATUS
         admission.setStatus(AdmissionStatus.ADMITTED);
 
+        // SAVE AND RETURN THE ADMISSION
         return admissionRepository.save(admission);
     }
 
@@ -126,7 +120,7 @@ public class AdmissionService {
                 .findByStatusOrderByAdmissionDateAsc(status);
     }
 
-    // FIND ADMISSIONS BETWEEN TWO DATES
+    // RETRIEVE ADMISSIONS BETWEEN TWO DATES
     public List<Admission> getAdmissionsBetweenDates(
             LocalDate start, LocalDate end) {
 
@@ -197,8 +191,10 @@ public class AdmissionService {
         // UPDATE THE ADMISSION DETAILS
         existingAdmission.setAdmissionDate(
                 updatedAdmission.getAdmissionDate());
+
         existingAdmission.setDiagnosis(
                 updatedAdmission.getDiagnosis());
+
         existingAdmission.setInpatient(inpatient);
         existingAdmission.setNurse(nurse);
 
@@ -256,14 +252,14 @@ public class AdmissionService {
                         HttpStatus.NOT_FOUND,
                         "The admission with that id does not exist"));
 
-        // PREVENT DELETION WHEN BILLING ITEMS EXIST
+        // CHECK WHETHER BILLING ITEMS EXIST
         boolean hasBillingItems =
                 billingItemRepository.existsByAdmission_Id(id);
 
         if (hasBillingItems) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Cannot delete an admission with billing items");
+                    "That admission has billing items, delete them first");
         }
 
         admissionRepository.delete(admission);
